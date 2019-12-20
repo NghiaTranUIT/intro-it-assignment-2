@@ -19,3 +19,29 @@ $ node index.js
 ## Open at localhost:3000 on Google Chrome
 
 ```
+
+### Endpoint
+#### Post Sensor data
+- POST /api/sensor
+- Header: content-type: application/json
+- Body JSON with a following format
+```json
+{
+    "temperature": 20,
+    "moisture": 30,
+    "light": 40
+}
+```
+
+#### Example
+
+```bash
+curl --request POST \
+  --url http://localhost:3000/api/sensor \
+  --header 'content-type: application/json' \
+  --data '{
+    "temperature": 20.232,
+    "moisture": 20.123213,
+    "light": 50
+}'
+```
