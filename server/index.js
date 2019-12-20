@@ -5,30 +5,41 @@ const port = 3000
 // Setup middlewares
 app.use(express.json()) 
 
-
 // Data
+const records = [];
 
-const tempRecords = [];
-const moistureRecords = [];
-const lightRecords = [];
-
-//
+// Greeting
 app.get('/', (req, res) => res.send('Hello World from Smart Garden!'))
 
 
 // POST sensor data
 app.post('/api/sensor', (req, res) => {
 	const body = req.body
-	console.log(body)
-	processSensorData(body)
-	console.log(tempRecords)
-  	res.json(req.body)
+
+	// Create record
+	const status = processSensorData(body)
+	console.log(records)
+
+	if (status) {
+		res.sendStatus(200)
+	} else {
+		res.status(400).send('Missing all sensor data')
+	}
 })
 
 function processSensorData(body) {
 	const temp = body.temperature
 	const moisture = body.moisture
 	const light = body.light
+
+	// Stop if all value are missing
+	if (temp === undefined &&
+		moisture === undefined &&
+		light === undefined) {
+		return false
+	}
+
+	// Init record
 	const timestamp = Date.now()
 	const date = new Date().toISOString()
 	const record = {
@@ -36,20 +47,21 @@ function processSensorData(body) {
 		"date": date
 	}
 
+	// Receive value if need
 	if (temp !== undefined) {
-		record.value = temp
-		tempRecords.push(record)
+		record.temp = temp
 	}
-
 	if (moisture !== undefined) {
-		record.value = moisture
-		moistureRecords.push(record)
+		record.moisture = moisture
+	}
+	if (light !== undefined) {
+		record.light = light
+		
 	}
 
-	if (light !== undefined) {
-		record.value = light
-		lightRecords.push(record)
-	}
+	// Save
+	records.push(record)
+	return true
 }
 
 // Start the server at 3000 port
