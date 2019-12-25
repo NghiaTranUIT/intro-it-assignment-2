@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const port = 3000
-var google_sheet = require('/google_sheet')
+var google_sheet = require('/.google_sheet')
 
 
 // Setup middlewares
