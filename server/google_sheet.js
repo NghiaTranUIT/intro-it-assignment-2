@@ -10,12 +10,14 @@ const RANGE = 'Sheet1'
 
 var authen2Client = undefined
 
-//Load client secret from a local file
-fs.readFile('credentials.json', (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err)
-    // Authorize a client with credentials, then call the Google Sheets API.
-    authorize(JSON.parse(content), createServerAndGoogleSheetsObj)
-})
+function initGoogleSheet() {
+    //Load client secret from a local file
+    fs.readFile('credentials.json', (err, content) => {
+        if (err) return console.log('Error loading client secret file:', err)
+        // Authorize a client with credentials, then call the Google Sheets API.
+        authorize(JSON.parse(content), createServerAndGoogleSheetsObj)
+    })
+}
 
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
@@ -70,12 +72,6 @@ function getNewToken(oAuth2Client, callback) {
 function createServerAndGoogleSheetsObj(oAuth2Client) {
 	//Store authentication to client for later use
 	authen2Client = oAuth2Client
-
-}
-
-function postData(records, callback) {
-	const sheets = google.sheets({ version: 'v4', auth: authen2Client })
-		saveDataAndSendResponse(records, sheets, callback)
 }
 
 function saveDataAndSendResponse(data, googleSheetsObj, callback) {
@@ -96,9 +92,12 @@ function saveDataAndSendResponse(data, googleSheetsObj, callback) {
 
 }
 
-module.exports {
-	function postData(records, callback) {
-		const sheets = google.sheets({ version: 'v4', auth: authen2Client })
-			saveDataAndSendResponse(records, sheets, callback)
-	}
+function sendRecord(records, callback) {
+    const sheets = google.sheets({ version: 'v4', auth: authen2Client })
+    saveDataAndSendResponse(records, sheets, callback)
+}
+
+module.exports = {
+    sendRecord,
+    initGoogleSheet
 }

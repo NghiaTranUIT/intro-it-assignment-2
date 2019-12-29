@@ -1,15 +1,16 @@
 const express = require('express')
 const app = express()
 const port = 3000
-var google_sheet = require('/.google_sheet')
+var google_sheet = require('./google_sheet')
 
+// Authorize with google if need
+google_sheet.initGoogleSheet()
 
 // Setup middlewares
 app.use(express.json()) 
 
 // Greeting
 app.get('/', (req, res) => res.send('Hello World from Smart Garden!'))
-
 
 // POST sensor data
 app.post('/api/sensor', (req, res) => {
@@ -20,7 +21,7 @@ app.post('/api/sensor', (req, res) => {
 	console.log(records)
 
 	if (records.length > 0) {
-		google_sheet.postData(records, (err, result) => {
+		google_sheet.sendRecord(records, (err, result) => {
 			if (err) {
 	            console.log(err)
 	            res.status(400).send('An error occurd while attempting to save data. See console output.')
