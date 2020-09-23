@@ -45,3 +45,13 @@ curl --request POST \
     "light": 50
 }'
 ```
+
+### How to regenerate a Token
+1. Delete server/token.json
+2. Run
+```bash
+node index.js
+```
+3. Copy a link on the terminal and start authorizing
+4. Follow the guideline
+5. Commit and push
